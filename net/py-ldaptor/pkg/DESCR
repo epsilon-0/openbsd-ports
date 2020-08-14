@@ -1,0 +1,6 @@
+a pure-python library that implements:
+- LDAP client logic
+- separately-accessible LDAP and BER protocol message generation/parsing
+- ASCII-format LDAP filter generation and parsing
+- LDIF format data generation
+- Samba password changing logic
