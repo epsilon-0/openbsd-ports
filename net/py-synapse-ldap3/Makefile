@@ -4,6 +4,8 @@ COMMENT =	ldap auth mechanism for synapse
 
 MODPY_EGG_VERSION =	0.1.4
 
+PKGNAME =	py-synapse-ldap3-${MODPY_EGG_VERSION}
+
 GH_ACCOUNT =	matrix-org
 GH_PROJECT =	matrix-synapse-ldap3
 GH_TAGNAME =	v${MODPY_EGG_VERSION}
@@ -18,8 +20,10 @@ PERMIT_PACKAGE =	Yes
 
 MODULES =	lang/python
 
-MODPY_VERSION =	${MODPY_DEFAULT_VERSION_3}
-MODPY_SETUPTOOLS =	Yes
+FLAVORS =	python3
+FLAVOR ?=	python3
+
+MODPY_SETUPTOOLS =	YES
 
 RUN_DEPENDS =	databases/py-ldap${MODPY_FLAVOR} \
 		devel/py-twisted${MODPY_FLAVOR} \
