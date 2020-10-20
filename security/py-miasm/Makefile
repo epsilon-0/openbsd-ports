@@ -4,13 +4,15 @@ BROKEN-i386 =	uint128_t
 
 COMMENT =	reverse engineering framework in Python
 
-MODPY_EGG_VERSION = 2.0.1.1
+MODPY_EGG_VERSION = 0.1.3_pl20210304
 DISTNAME =	miasm-${MODPY_EGG_VERSION}
 PKGNAME =	py-${DISTNAME}
 
+EPOCH =		0
+
 GH_ACCOUNT =	cea-sec
 GH_PROJECT =	miasm
-GH_COMMIT =	f7157afaccd897fb00eeb97817d124790f0ede67
+GH_COMMIT =	43fef27b4e21b5ad5d592733d1989c22e2cfff28
 
 CATEGORIES =	security devel
 
@@ -22,15 +24,16 @@ MAINTAINER =	Remi Pointel <rpointel@openbsd.org>
 PERMIT_PACKAGE =	Yes
 
 MODULES =	lang/python
-MODPY_VERSION =	${MODPY_DEFAULT_VERSION_2}
+FLAVORS =	python3
+FLAVOR =	python3
 
-WANTLIB += pthread ${MODPY_WANTLIB}
+WANTLIB += 	pthread ${MODPY_WANTLIB}
 
-RUN_DEPENDS =	security/py-elfesteem \
-		devel/py-llvmlite \
-		devel/py-parsing
-
-TEST_DEPENDS =	devel/py-cparser
+RUN_DEPENDS =	devel/angr/py-z3-solver \
+		devel/py-cparser${MODPY_FLAVOR} \
+		devel/py-future${MODPY_FLAVOR} \
+		devel/py-llvmlite${MODPY_FLAVOR} \
+		devel/py-parsing${MODPY_FLAVOR}
 
 post-build:
 	${MODPY_BIN} ${MODPY_LIBDIR}/compileall.py ${WRKSRC}/example
@@ -39,7 +42,10 @@ post-install:
 	${INSTALL_DATA_DIR} ${PREFIX}/share/${MODPY_PY_PREFIX}miasm
 	cp -r ${WRKSRC}/example ${PREFIX}/share/${MODPY_PY_PREFIX}miasm/
 
+# this takes **really** long
 do-test:
-	cd ${WRKSRC}/test && ${MODPY_BIN} ./test_all.py -m
+	cd ${WRKSRC}/test && \
+		PYTHONPATH="..:../.." \
+		${MODPY_BIN} ./test_all.py
 
 .include <bsd.port.mk>
