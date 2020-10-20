@@ -1,0 +1,13 @@
+$OpenBSD$
+
+upstream libllvmlite.so doesn't build nicely
+
+Index: config_makefile
+--- LIB_MAKEFILE.orig
++++ LIB_MAKEFILE
+@@ -0,0 +1,5 @@
++SRC=ffi/*.cpp
++
++ffi/libllvmlite.so:
++	$(CXX) -shared $(CXXFLAGS) $(LDFLAGS) -o $@ $(SRC) $(LDLIBS)
++
