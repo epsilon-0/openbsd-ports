@@ -1,4 +1,2 @@
-SHA256 (lapack-3.8.0/lapack-3.8.0.tar.gz) = 3rIsxKYSC/9yYhFVqZF/SF+W74MZrAdKevvGiquIvPY=
-SHA256 (lapack-3.8.0/manpages.tgz) = IpprpXnvbkH7rjKo7p6eWmILO1G9JEZm44bJXHucYIM=
-SIZE (lapack-3.8.0/lapack-3.8.0.tar.gz) = 7426094
-SIZE (lapack-3.8.0/manpages.tgz) = 1930616
+SHA256 (lapack-3.9.0.tar.gz) = EGCH8btfRq/fun9WnQy+I9rLmgfNJHM3ZaDonb4a1XM=
+SIZE (lapack-3.9.0.tar.gz) = 7534567

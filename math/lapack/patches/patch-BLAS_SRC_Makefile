@@ -1,0 +1,17 @@
+$OpenBSD$
+
+Fix i{c,z}amax behavior on any-i386 and m68k
+
+Index: BLAS/SRC/Makefile
+--- BLAS/SRC/Makefile.orig
++++ BLAS/SRC/Makefile
+@@ -169,3 +169,9 @@ cleanobj:
+ 	rm -f *.o
+ cleanlib:
+ 	#rm -f $(BLASLIB)  # May point to a system lib, e.g. -lblas
++
++icamax.o: icamax.f
++	$(FC) $(FFLAGS) -ffloat-store -c $< -o $@
++
++izamax.o: izamax.f
++	$(FC) $(FFLAGS) -ffloat-store -c $< -o $@
