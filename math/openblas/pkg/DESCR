@@ -1,0 +1,6 @@
+OpenBLAS is an optimized Basic Linear Algebra Subprograms (BLAS)
+library based on GotoBLAS2 1.13 BSD version.
+OpenBLAS has optimized code for modern architectures
+and has accrued many other features and bug fixes beyond
+GotoBLAS, many related to making use of native CPU instructions
+to speed up computations.

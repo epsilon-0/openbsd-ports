@@ -1,0 +1,31 @@
+$OpenBSD$
+
+add building shared BLAS/LAPACK libraries
+
+Index: interface/Makefile
+--- interface/Makefile.orig
++++ interface/Makefile
+@@ -2323,3 +2323,23 @@ cblas_zgeadd.$(SUFFIX) cblas_zgeadd.$(PSUFFIX) : zgead
+ cblas_xerbla.$(SUFFIX) cblas_xerbla.$(PSUFFIX) : xerbla.c
+ 	$(CC) -c $(CFLAGS) -DCBLAS $< -o $(@F)
+ 
++#####
++shared-blas-lapack: libblas.so libcblas.so liblapack.so liblapacke.so
++
++# The list of prerequisite is created by comparing with NETLIB BLAS public API.
++libblas.so: $(SBLAS1OBJS) $(SBLAS2OBJS) $(SBLAS3OBJS) $(DBLAS1OBJS) $(DBLAS2OBJS) $(DBLAS3OBJS) $(CBLAS1OBJS) $(CBLAS2OBJS) $(CBLAS3OBJS) $(ZBLAS1OBJS) $(ZBLAS2OBJS) $(ZBLAS3OBJS) ../kernel/lsame.o ../kernel/scabs1.o ../kernel/dcabs1.o ../driver/others/xerbla.o
++	$(CC) $(LDFLAGS) -shared -o $@.${LIBblas_VERSION} $^ -Wl,-soname,libblas.so.${LIBblas_VERSION} -L.. -lopenblas $(EXTRALIB)
++
++libcblas.so: $(CSBLAS1OBJS) $(CSBLAS2OBJS) $(CSBLAS3OBJS) $(CDBLAS1OBJS) $(CDBLAS2OBJS) $(CDBLAS3OBJS) $(CCBLAS1OBJS) $(CCBLAS2OBJS) $(CCBLAS3OBJS) $(CZBLAS1OBJS) $(CZBLAS2OBJS) $(CZBLAS3OBJS) ../kernel/lsame.o ../kernel/scabs1.o ../kernel/dcabs1.o ../driver/others/xerbla.o
++	$(CC) $(LDFLAGS) -shared -o $@.${LIBcblas_VERSION} $^ -Wl,-soname,libblas.so.${LIBcblas_VERSION} -L.. -lopenblas $(EXTRALIB)
++
++# The prerequisites must match the symbols deleted in target delete-duplicate-lapack-objects
++liblapack.so: $(SLAPACKOBJS) $(DLAPACKOBJS) $(CLAPACKOBJS) $(ZLAPACKOBJS) ../kernel/lsame.o ../driver/others/xerbla.o
++	$(CC) $(LDFLAGS) -shared -o $@.${LIBlapack_VERSION} $^ ../lapack-netlib/SRC/*.o -Wl,-soname,liblapack.so.${LIBlapack_VERSION} -L.. -lopenblas $(EXTRALIB)
++
++liblapacke.so: liblapack.so
++	$(CC) $(LDFLAGS) -shared -o $@.${LIBlapacke_VERSION} `find ../lapack-netlib/LAPACKE -name "*.o"` -Wl,-soname,liblapacke.so.${LIBlapacke_VERSION} -L.. -lopenblas $(EXTRALIB)
++
++clean::
++	rm -f libblas.so.${LIBblas_VERSION} libcblas.so.${LIBcblas_VERSION} liblapack.so.${LIBlapack_VERSION} liblapacke.so.${LIBlapacke_VERSION}
++

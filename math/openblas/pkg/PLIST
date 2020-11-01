@@ -1,0 +1,20 @@
+@comment $OpenBSD: PLIST,v$
+include/cblas.h
+include/f77blas.h
+include/lapack.h
+include/lapacke.h
+include/lapacke_config.h
+include/lapacke_mangling.h
+include/lapacke_utils.h
+include/openblas_config.h
+lib/cmake/
+lib/cmake/openblas/
+lib/cmake/openblas/OpenBLASConfig.cmake
+lib/cmake/openblas/OpenBLASConfigVersion.cmake
+@lib lib/libblas.so.${LIBblas_VERSION}
+@lib lib/libcblas.so.${LIBcblas_VERSION}
+@lib lib/liblapack.so.${LIBlapack_VERSION}
+@lib lib/liblapacke.so.${LIBlapacke_VERSION}
+@static-lib lib/libopenblas.a
+@lib lib/libopenblas.so.${LIBopenblas_VERSION}
+lib/pkgconfig/openblas.pc

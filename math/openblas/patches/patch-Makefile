@@ -1,0 +1,25 @@
+$OpenBSD$
+
+disable tests by default
+disable symlink
+
+Index: Makefile
+--- Makefile.orig
++++ Makefile
+@@ -39,7 +39,7 @@ SUBDIRS_ALL = $(SUBDIRS) test ctest utest exports benc
+ .PHONY : all libs netlib $(RELA) test ctest shared install
+ .NOTPARALLEL : all libs $(RELA) prof lapack-test install blas-test
+ 
+-all :: libs netlib $(RELA) tests shared
++all :: libs netlib $(RELA) shared
+ 	@echo
+ 	@echo " OpenBLAS build complete. ($(LIB_COMPONENTS))"
+ 	@echo
+@@ -119,7 +119,6 @@ ifeq ($(OSNAME), $(filter $(OSNAME),Linux SunOS Androi
+ endif
+ ifeq ($(OSNAME), $(filter $(OSNAME),OpenBSD NetBSD))
+ 	@$(MAKE) -C exports so
+-	@ln -fs $(LIBSONAME) $(LIBPREFIX).so
+ endif
+ ifeq ($(OSNAME), Darwin)
+ 	@$(MAKE) -C exports dyn
