@@ -2,7 +2,7 @@
 
 COMMENT =	reliable, high performance TCP/HTTP load balancer
 
-DISTNAME =	haproxy-2.0.19
+DISTNAME =	haproxy-2.3.4
 CATEGORIES =	net www
 HOMEPAGE =	http://www.haproxy.org/
 MAINTAINER =	Daniel Jakots <obsd@chown.me>
@@ -12,7 +12,7 @@ PERMIT_PACKAGE =		Yes
 
 WANTLIB +=	c crypto pcre pcreposix pthread ssl z
 
-MASTER_SITES =	${HOMEPAGE}/download/2.0/src/
+MASTER_SITES =	${HOMEPAGE}/download/2.3/src/
 
 HAPROXYCONF =	${SYSCONFDIR}/haproxy
 HAPROXYSTATE =	/var/haproxy
