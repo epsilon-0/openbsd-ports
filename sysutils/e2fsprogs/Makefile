@@ -2,7 +2,7 @@
 
 COMMENT=	utilities to manipulate ext2 filesystems
 
-DISTNAME=	e2fsprogs-1.42.12
+DISTNAME=	e2fsprogs-1.45.6
 REVISION=	5
 CATEGORIES=	sysutils devel
 SHARED_LIBS=	blkid		0.0 \
