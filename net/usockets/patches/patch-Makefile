@@ -6,7 +6,7 @@ remove -flto -O3
 Index: Makefile
 --- Makefile.orig
 +++ Makefile
-@@ -1,60 +1,40 @@
+@@ -1,60 +1,39 @@
 -# WITH_OPENSSL=1 enables OpenSSL 1.1+ support or BoringSSL
 -# For now we need to link with C++ for OpenSSL support, but should be removed with time
 -ifeq ($(WITH_OPENSSL),1)
@@ -30,7 +30,7 @@ Index: Makefile
 -	override CFLAGS += -DLIBUS_USE_LIBUV
 -	override LDFLAGS += -luv
 -endif
-+PREFIX ?=	"/usr/local"
++PREFIX ?=	/usr/local
 +LIBDIR ?=	"$(PREFIX)/lib"
 +INCLUDEDIR ?=	"$(PREFIX)/include"
  
@@ -39,19 +39,19 @@ Index: Makefile
 -	override CFLAGS += -DLIBUS_USE_GCD
 -	override LDFLAGS += -framework CoreFoundation
 -endif
-+# OpenBSD specific library version
-+LIBTARGET ?=	libusockets.so.$(LIBusockets_VERSION)
++PKG_CONFIG ?=	pkg-config
  
 -# WITH_ASAN builds with sanitizers
 -ifeq ($(WITH_ASAN),1)
 -	override CFLAGS += -fsanitize=address -g
--	override LDFLAGS += -lasan
+-	override LDFLAGS += -fsanitize=address
 -endif
-+PKG_CONFIG ?=	pkg-config
++LIBTARGET =	libusockets.so.$(LIBusockets_VERSION)
  
 -override CFLAGS += -std=c11 -Isrc
 -override LDFLAGS += uSockets.a
-+override LDFLAGS +=	-lstdc++ -lcrypto -lssl `$(PKG_CONFIG) --libs libuv`
++REQUIRES =	libcrypto libssl libuv
++COMMON_FLAGS =	-Isrc -DLIBUS_USE_OPENSSL -DLIBUS_USE_LIBUV `$(PKG_CONFIG) --cflags $(REQUIRES)`
  
 -# By default we build the uSockets.a static library
 -default:
@@ -62,37 +62,35 @@ Index: Makefile
 -	$(CXX) $(CXXFLAGS) -std=c++17 -flto -O3 -c src/crypto/*.cpp
 -endif
 -	$(AR) rvs uSockets.a *.o
-+COMMON_FLAGS =	-DLIBUS_USE_OPENSSL -DLIBUS_USE_LIBUV -Isrc `$(PKG_CONFIG) --cflags libuv`
-+override CFLAGS +=	$(COMMON_FLAGS)
-+override CXXFLAGS +=	$(COMMON_FLAGS)
++CFLAGS +=	-std=c11 $(COMMON_FLAGS)
++CXXFLAGS +=	-std=c++17 $(COMMON_FLAGS)
++LDFLAGS +=	`$(PKG_CONFIG) --libs $(REQUIRES)`
  
 -# Builds all examples
 -.PHONY: examples
 -examples: default
 -	for f in examples/*.c; do $(CC) -flto -O3 $(CFLAGS) -o $$(basename "$$f" ".c") "$$f" $(LDFLAGS); done
 +all:
-+	$(CC) -std=c11 -fPIC $(CFLAGS) -c src/*.c src/eventing/*.c src/crypto/*.c
-+	$(CXX) -std=c++17 -fPIC $(CXXFLAGS) -c src/crypto/*.cpp
++	$(CC) $(CFLAGS) -fPIC -c src/*.c src/eventing/*.c src/crypto/*.c
++	$(CXX) $(CXXFLAGS) -fPIC -c src/crypto/*.cpp
 +	$(AR) rvs libusockets.a *.o
 +	$(CC) -shared -o $(LIBTARGET) *.o -Wl,-soname,$(LIBTARGET) $(LDFLAGS)
-+	sed -e "s:@PREFIX@:$(PREFIX):" -e "s:@VERSION@:$(LIBusockets_VERSION):" \
-+		libusockets.pc.in > libusockets.pc
++	sed -e "s:@PREFIX@:$(PREFIX):" -e "s:@VERSION@:$(LIBusockets_VERSION):" libusockets.pc.in > libusockets.pc
  
 -swift_examples:
 -	swiftc -O -I . examples/swift_http_server/main.swift uSockets.a -o swift_http_server
-+install:
-+	install -d "$(LIBDIR)/pkgconfig" "$(INCLUDEDIR)"
-+	install -m 644 src/libusockets.h "$(INCLUDEDIR)"
-+	install -m 755 $(LIBTARGET) "$(LIBDIR)"
-+	install -m 755 libusockets.a "$(LIBDIR)"
-+	install -m 644 libusockets.pc "$(LIBDIR)/pkgconfig"
++install: all
++	install -d "$(DESTDIR)$(LIBDIR)/pkgconfig" "$(DESTDIR)$(INCLUDEDIR)"
++	install -m 644 src/libusockets.h "$(DESTDIR)$(INCLUDEDIR)/"
++	install -m 644 $(LIBTARGET) "$(DESTDIR)$(LIBDIR)"
++	install -m 644 libusockets.a "$(DESTDIR)$(LIBDIR)/"
++	install -m 644 libusockets.pc "$(DESTDIR)$(LIBDIR)/pkgconfig/"
  
  clean:
  	rm -f *.o
  	rm -f *.a
--	rm -rf .certs
 +	rm -f *.so
-+	rm -f libusockets.pc
+ 	rm -rf .certs
++	rm -f usockets.pc
 +
-+.PHONY: all install clean
-+
++.PHONY: all clean default install
