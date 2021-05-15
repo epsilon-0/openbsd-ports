@@ -4,12 +4,13 @@
 @rcscript ${RCDIR}/purritobin
 @bin bin/purrito
 @man man/man1/purrito.1
+share/PurritoBin/
+share/PurritoBin/POSIX_shell_client.sh
+share/PurritoBin/about.html
+share/PurritoBin/index.html
+share/PurritoBin/paste.html
 share/doc/pkg-readmes/${PKGSTEM}
 @owner _purritobin
 @group _purritobin
+@sample /var/db/purritobin/
 @sample /var/www/purritobin/
-@owner
-@group
-share/purritobin/
-share/purritobin/POSIX_shell_client.sh
-share/purritobin/paste.html
